@@ -6,4 +6,8 @@
     <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ML.FichaTecnica.Services\ML.FichaTecnica.Services.csproj" />
+  </ItemGroup>
+
 </Project>
