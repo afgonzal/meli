@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -8,7 +7,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using ML.FichaTecnica.BusinessEntities;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace ML.FichaTecnica.Services
 {
@@ -36,9 +34,11 @@ namespace ML.FichaTecnica.Services
             using (var reader = new JsonTextReader(streamReader))
             {
                 var serializer = new JsonSerializer();
-
+                _logger.LogDebug($"Item {itemId} back from backend.");
                 return serializer.Deserialize<Item>(reader);
             }
+           
+
         }
 
         public async Task<TechnicalSpecs> GetTechnicalSpecs(string domain)
@@ -49,7 +49,7 @@ namespace ML.FichaTecnica.Services
             using (var reader = new JsonTextReader(streamReader))
             {
                 var serializer = new JsonSerializer();
-
+                _logger.LogDebug($"TechSpecs {domain} back from backend.");
                 return serializer.Deserialize<TechnicalSpecs>(reader);
             }
         }

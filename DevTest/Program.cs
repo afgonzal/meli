@@ -88,7 +88,7 @@ namespace DevTest
         public async Task Run()
         {
             _logger.LogDebug("Arrancando");
-            await _fichaTecnicaService.BuildItemAttributes("MLA885018383");
+            var result = await _fichaTecnicaService.BuildItemAttributes("MLA885018383");
             _logger.LogDebug("Fin corrida App");
         }
     }

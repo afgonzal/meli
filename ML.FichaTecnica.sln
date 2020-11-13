@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ML.FichaTecnica.Services", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ML.FichaTecnica.BusinessEntities", "ML.FichaTecnica.BusinessEntities\ML.FichaTecnica.BusinessEntities.csproj", "{764778B2-991F-45F2-8FBA-F8A9F6BC601E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ML.FichaTecnica.Services.Tests", "ML.FichaTecnica.Services.Tests\ML.FichaTecnica.Services.Tests.csproj", "{6D9AA05C-7A0B-41F4-8063-F8E020BA9B92}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{764778B2-991F-45F2-8FBA-F8A9F6BC601E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{764778B2-991F-45F2-8FBA-F8A9F6BC601E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{764778B2-991F-45F2-8FBA-F8A9F6BC601E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D9AA05C-7A0B-41F4-8063-F8E020BA9B92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D9AA05C-7A0B-41F4-8063-F8E020BA9B92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D9AA05C-7A0B-41F4-8063-F8E020BA9B92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D9AA05C-7A0B-41F4-8063-F8E020BA9B92}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
