@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+using ML.FichaTecnica.BusinessEntities;
 using Newtonsoft.Json.Linq;
 
 namespace ML.FichaTecnica.Services
@@ -33,22 +33,17 @@ namespace ML.FichaTecnica.Services
             
             _logger.LogDebug($"Item back from backend elapsed {sw.ElapsedMilliseconds}ms");
 
-            var itemAttributes = ((JArray)item["attributes"]).ToObject<IList<Attribute>>();
 
-            var domain = item["domain_id"].Value<string>(); // item.Property("domain_id").Value.ToString();
-
-            var techSpecs = await _backend.GetTechnicalSpecs(domain);
+            var techSpecs = await _backend.GetTechnicalSpecs(item.DomainId);
             _logger.LogDebug($"TechSpecs from backend elapsed {sw.ElapsedMilliseconds}ms");
 
-            var groups = (JArray) techSpecs["groups"];
-            foreach (var group in groups)
+            foreach (var group in techSpecs.Groups)
             {
-                var components = ((JArray) group["components"]).ToObject<IList<Component>>();
-                foreach (var component in components)
+                foreach (var component in group.Components)
                 {
                     foreach (var attribute in component.Attributes)
                     {
-                        var itemAttribute = itemAttributes.SingleOrDefault(attr => attr.Id == attribute.Id);
+                        var itemAttribute = item.Attributes.SingleOrDefault(attr => attr.Id == attribute.Id);
                         if (itemAttribute != null)
                         {
                             _logger.LogDebug($"Attribute found {sw.ElapsedMilliseconds}ms");
@@ -68,23 +63,6 @@ namespace ML.FichaTecnica.Services
             return default(T);
         }
 
-
-        public class Attribute
-        {
-            public string Id { get; set; }
-            [JsonProperty("value_name")]
-            public string ValueName { get; set; }
-
-            public string Name { get; set; }
-        }
-
-        public class Component
-        {
-            [JsonProperty("component")]
-            public string ComponentType { get; set; }
-            public string Label { get; set; }
-            
-            public IList<Attribute> Attributes { get; set; }
-        }
+       
     }
 }

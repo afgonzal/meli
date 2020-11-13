@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using ML.FichaTecnica.BusinessEntities;
 using Newtonsoft.Json.Linq;
 
 namespace ML.FichaTecnica.Services
@@ -13,12 +14,12 @@ namespace ML.FichaTecnica.Services
         /// </summary>
         /// <param name="itemId"></param>
         /// <returns></returns>
-        Task<JObject> GetItem(string itemId);
+        Task<Item> GetItem(string itemId);
         /// <summary>
         /// Trae Ficha Técnica para un dominio ej.Celulares
         /// </summary>
         /// <param name="domain"></param>
         /// <returns></returns>
-        Task<JObject> GetTechnicalSpecs(string domain);
+        Task<TechnicalSpecs> GetTechnicalSpecs(string domain);
     }
 }
