@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -30,31 +31,36 @@ namespace ML.FichaTecnica.Services
             _logger.LogDebug($"BuildItemAttributes start item:{itemId}");
             
             var item = await _backend.GetItem(itemId);
-            
-            var result = new ItemAttributesOutput {Id = itemId, Title =  item.Title, Groups = new List<GroupOutput>()};
+            //Move List to a Dictionary to improve search efficiency
+            var itemAttributes = item.Attributes.ToDictionary(attr => attr.Id, attr => attr);
 
             var techSpecs = await _backend.GetTechnicalSpecs(item.DomainId);
 
             var sw = new Stopwatch();
             sw.Start();
-            foreach (var group in techSpecs.Groups)
+
+            var resultGroups = new BlockingCollection<GroupOutput>();
+
+            
+            Parallel.ForEach(techSpecs.Groups, group =>
             {
-                var grpOutput = new GroupOutput {Label = group.Label, Components = new List<ComponentOutput>()};
+                var grpOutput = new GroupOutput { Label = group.Label, Components = new List<ComponentOutput>() };
                 foreach (var component in group.Components)
                 {
                     if (Enum.TryParse<ComponentTypes>(component.ComponentType, true, out ComponentTypes componentType))
                     {
-                        foreach (var attribute in component.Attributes)
+                        foreach (var techAttribute in component.Attributes)
                         {
-
-                            var itemAttribute = item.Attributes.SingleOrDefault(attr => attr.Id == attribute.Id);
-                            if (itemAttribute != null)
+                            if (itemAttributes.ContainsKey(techAttribute.Id)) //some attributes are not in the Item
                             {
+                                var itemAttribute = itemAttributes[techAttribute.Id];
                                 _logger.LogDebug($"Attribute {itemAttribute.Id} found. t:{sw.ElapsedMilliseconds}ms");
 
                                 grpOutput.Components.Add(new ComponentOutput
                                 {
-                                    Id = itemAttribute.Id, Name = itemAttribute.Name, Value = itemAttribute.ValueName,
+                                    Id = itemAttribute.Id,
+                                    Name = itemAttribute.Name,
+                                    Value = itemAttribute.ValueName,
                                     ComponentType = componentType
                                 });
                                 var t = itemAttribute.ValueName;
@@ -62,13 +68,18 @@ namespace ML.FichaTecnica.Services
                         }
                     }
                 }
+
                 if (grpOutput.Components.Any())
-                    result.Groups.Add((grpOutput));
-            }
+                    resultGroups.Add(grpOutput);
+            });
+
+          
+    
             sw.Stop();
             _logger.LogDebug($"BuildItemAttributes end item:{itemId}, time:{sw.ElapsedMilliseconds}ms");
 
-            return result;
+            return new ItemAttributesOutput { Id = itemId, Title = item.Title, Groups = resultGroups.ToList()};
+
         }
 
         private T ReadProperty<T>(JObject json, string propertyName)
