@@ -110,6 +110,23 @@ namespace ML.FichaTecnica.Services
             return millones.ToString();
         }
 
+        /// <summary>
+        /// Convierte un numero a palabras (2 = dos)
+        /// Strings no convertibles, devuelve NaN
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public static string Int2Espanol(string n)
+        {
+            if (!int.TryParse(n, out int number))
+                return "NaN";
+            return Int2Espanol(number);
+        }
+        /// <summary>
+        /// Convierte un numero a palabras (2 = dos)
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
         public static string Int2Espanol(int n)
         {
             if (n < 0)

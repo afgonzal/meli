@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ML.FichaTecnica.Services;
+using Newtonsoft.Json;
 using NLog.Extensions.Logging;
 
 namespace DevTest
@@ -89,6 +90,7 @@ namespace DevTest
         {
             _logger.LogDebug("Arrancando");
             var result = await _fichaTecnicaService.BuildItemAttributes("MLA885018383");
+            _logger.LogDebug(JsonConvert.SerializeObject(result));
             _logger.LogDebug("Fin corrida App");
         }
     }

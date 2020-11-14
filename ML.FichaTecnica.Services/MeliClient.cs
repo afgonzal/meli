@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Xml.Schema;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using ML.FichaTecnica.BusinessEntities;
@@ -29,13 +31,17 @@ namespace ML.FichaTecnica.Services
 
         public async Task<Item> GetItem(string itemId)
         {
+            var sw = new Stopwatch();
+            sw.Start();
             var response = await _client.GetStreamAsync($"items/{itemId}");
             using (var streamReader = new StreamReader(response))
             using (var reader = new JsonTextReader(streamReader))
             {
                 var serializer = new JsonSerializer();
-                _logger.LogDebug($"Item {itemId} back from backend.");
-                return serializer.Deserialize<Item>(reader);
+                var result = serializer.Deserialize<Item>(reader);
+                sw.Stop();
+                _logger.LogDebug($"Item {itemId} back from backend. Elapsed:{sw.ElapsedMilliseconds}ms");
+                return result;
             }
            
 
@@ -43,14 +49,18 @@ namespace ML.FichaTecnica.Services
 
         public async Task<TechnicalSpecs> GetTechnicalSpecs(string domain)
         {
+            var sw = new Stopwatch();
+            sw.Start();
             var response = await _client.GetStreamAsync($"domains/{domain}/technical_specs/output");
 
             using (var streamReader = new StreamReader(response))
             using (var reader = new JsonTextReader(streamReader))
             {
                 var serializer = new JsonSerializer();
-                _logger.LogDebug($"TechSpecs {domain} back from backend.");
-                return serializer.Deserialize<TechnicalSpecs>(reader);
+                var result = serializer.Deserialize<TechnicalSpecs>(reader);
+                sw.Stop();
+                _logger.LogDebug($"TechSpecs {domain} back from backend. Elapsed:{sw.ElapsedMilliseconds}ms");
+                return result;
             }
         }
     }

@@ -31,7 +31,8 @@ namespace ML.FichaTecnica.Controllers
             try
             {
                 var result = await _fichaTecnicaService.BuildItemAttributes(id);
-                _logger.LogInformation($"Get item {id} attributes response:{JsonConvert.SerializeObject(result)}");
+                _logger.LogTrace($"Get item {id} attributes response:{JsonConvert.SerializeObject(result)}");
+                _logger.LogInformation($"Get item {id} attributes finished.");
                 return Ok(result);
             }
             catch (Exception ex)

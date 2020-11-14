@@ -6,6 +6,5 @@
         public string Name { get; set; }
         public string Value { get; set; }
 
-        public ComponentTypes ComponentType { get; set; }
     }
 }

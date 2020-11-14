@@ -64,14 +64,20 @@ namespace ML.FichaTecnica.Services
             _logger.LogDebug($"BuildItemAttributes end item:{itemId}, time:{sw.ElapsedMilliseconds}ms");
 
             return new ItemAttributesOutput { Id = itemId, Title = item.Title, Groups = resultGroups.ToList()};
-
         }
 
+        /// <summary>
+        /// Itera un Grupo de una FT, buscando los atributos que se encuentren en el Item
+        /// </summary>
+        /// <param name="group">Group a digerir</param>
+        /// <param name="itemAttributes">Attributos del Item</param>
+        /// <returns></returns>
         private GroupOutput DigestGroup(Group group, Dictionary<string, Attribute> itemAttributes)
         {
             var grpOutput = new GroupOutput { Label = group.Label, Components = new List<ComponentOutput>() };
             foreach (var component in group.Components)
             {
+                //Solo proceso 4 tipos de Componente
                 if (Enum.TryParse<ComponentTypes>(component.ComponentType, true, out ComponentTypes componentType))
                 {
                     foreach (var techAttribute in component.Attributes)
@@ -79,15 +85,25 @@ namespace ML.FichaTecnica.Services
                         if (itemAttributes.ContainsKey(techAttribute.Id)) //some attributes are not in the Item
                         {
                             var itemAttribute = itemAttributes[techAttribute.Id];
-
-                            grpOutput.Components.Add(new ComponentOutput
+                            var output = new ComponentOutput
                             {
                                 Id = itemAttribute.Id,
-                                Name = itemAttribute.Name,
-                                Value = itemAttribute.ValueName,
-                                ComponentType = componentType
-                            });
-                            var t = itemAttribute.ValueName;
+                                Name = itemAttribute.Name
+                            };
+                            //ValueName depends on the comp type
+                            switch (componentType)
+                            {
+                                case ComponentTypes.NUMBER_OUTPUT:
+                                    output.Value = NumerosLeibles.Int2Espanol(itemAttribute.ValueName);
+                                    break;
+                                case ComponentTypes.NUMBER_UNIT_OUTPUT:
+                                case ComponentTypes.BOOLEAN_OUTPUT:
+                                case ComponentTypes.TEXT_OUTPUT:
+                                    output.Value = itemAttribute.ValueName;
+                                    break;
+                            }
+                            
+                            grpOutput.Components.Add(output);
                         }
                     }
                 }
