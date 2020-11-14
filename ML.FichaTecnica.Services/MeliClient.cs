@@ -20,13 +20,10 @@ namespace ML.FichaTecnica.Services
         private readonly ILogger<MeliClientService> _logger;
         private readonly HttpClient _client;
 
-        public MeliClientService(IConfiguration config, ILogger<MeliClientService> logger)
+        public MeliClientService(ILogger<MeliClientService> logger, HttpClient client)
         {
             _logger = logger;
-            _client = new HttpClient();
-            _client.DefaultRequestHeaders.Accept.Clear();
-            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            _client.BaseAddress = new Uri(config["MLApiBaseUrl"]);
+            _client = client;
         }
 
         public async Task<Item> GetItem(string itemId)
