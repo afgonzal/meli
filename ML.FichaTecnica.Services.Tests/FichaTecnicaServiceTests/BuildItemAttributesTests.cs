@@ -28,7 +28,7 @@ namespace ML.FichaTecnica.Services.Tests
                         {
                             ComponentType = "TEXT_OUTPUT",
                             Label = $"CompLbl{cid}",
-                            Attributes = Enumerable.Range(1, 4).Select(aid => new Attribute
+                            Attributes = Enumerable.Range(1, 4).Select(aid => new ComponentAttribute
                                 {Id = $"attr{id}", Name = $"AttrName{id}", ValueName = $"AttrVName{id}"}).ToList()
                         }
                     ).ToList()
@@ -41,7 +41,7 @@ namespace ML.FichaTecnica.Services.Tests
             return new Item
             {
                 Id = "MLA1234", DomainId = "MLA-CASAS", CategoryId = "Alq", Title = "Casa linda",
-                Attributes = Enumerable.Range(1, 10).Select(id => new Attribute
+                Attributes = Enumerable.Range(1, 10).Select(id => new ComponentAttribute
                     {Id = $"attr{id}", Name = $"AttrName{id}", ValueName = $"AttrVName{id}"}).ToList()
             };
         }

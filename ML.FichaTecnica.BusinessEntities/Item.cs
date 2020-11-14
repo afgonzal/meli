@@ -10,7 +10,7 @@ namespace ML.FichaTecnica.BusinessEntities
         [JsonProperty("category_id")]
         public string CategoryId { get; set; }
 
-        public IList<Attribute> Attributes { get; set; }
+        public IList<ComponentAttribute> Attributes { get; set; }
 
         [JsonProperty("domain_id")]
         public string DomainId { get; set; }

@@ -9,7 +9,7 @@ namespace ML.FichaTecnica.BusinessEntities
         public string ComponentType { get; set; }
         public string Label { get; set; }
 
-        public IList<Attribute> Attributes { get; set; }
+        public IList<ComponentAttribute> Attributes { get; set; }
     }
 
     public enum ComponentTypes
