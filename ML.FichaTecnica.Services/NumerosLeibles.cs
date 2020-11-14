@@ -3,14 +3,19 @@ using System.Text;
 
 namespace ML.FichaTecnica.Services
 {
-    public static class NumerosLeibles
+    public interface INumbersToLanguage
     {
-        private static readonly string[] Unidades = new string[] { "cero", "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve" , "diez", "once", "doce",
+        string Int2Espanol(string n);
+        string Int2Espanol(int n);
+    }
+    public class NumerosLeiblesService  : INumbersToLanguage
+    {
+        private readonly string[] Unidades = new string[] { "cero", "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve" , "diez", "once", "doce",
             "trece", "catorce", "quince" };
-        private static readonly string[] Decenas = new string[] { "treinta", "cuarenta", "cincuenta", "sesenta", "setenta", "ochenta", "noventa" };
+        private readonly string[] Decenas = new string[] { "treinta", "cuarenta", "cincuenta", "sesenta", "setenta", "ochenta", "noventa" };
 
 
-        private static string Espanol(int numero)
+        private string Espanol(int numero)
         {
             if (numero < 16)
                 return Unidades[numero];
@@ -116,7 +121,7 @@ namespace ML.FichaTecnica.Services
         /// </summary>
         /// <param name="n"></param>
         /// <returns></returns>
-        public static string Int2Espanol(string n)
+        public string Int2Espanol(string n)
         {
             if (!int.TryParse(n, out int number))
                 return "NaN";
@@ -127,7 +132,7 @@ namespace ML.FichaTecnica.Services
         /// </summary>
         /// <param name="n"></param>
         /// <returns></returns>
-        public static string Int2Espanol(int n)
+        public string Int2Espanol(int n)
         {
             if (n < 0)
             {

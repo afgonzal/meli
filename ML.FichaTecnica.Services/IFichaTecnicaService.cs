@@ -20,11 +20,13 @@ namespace ML.FichaTecnica.Services
     {
         private readonly IMeliClient _backend;
         private readonly ILogger<FichaTecnicaService> _logger;
+        private readonly INumbersToLanguage _numbersOutputService;
 
-        public FichaTecnicaService(IMeliClient client, ILogger<FichaTecnicaService> logger )
+        public FichaTecnicaService(IMeliClient client, ILogger<FichaTecnicaService> logger,INumbersToLanguage numbersOutputService)
         {
             _backend = client;
             _logger = logger;
+            _numbersOutputService = numbersOutputService;
         }
 
         public async Task<ItemAttributesOutput> BuildItemAttributes(string itemId)
@@ -94,7 +96,7 @@ namespace ML.FichaTecnica.Services
                             switch (componentType)
                             {
                                 case ComponentTypes.NUMBER_OUTPUT:
-                                    output.Value = NumerosLeibles.Int2Espanol(itemAttribute.ValueName);
+                                    output.Value = _numbersOutputService.Int2Espanol(itemAttribute.ValueName);
                                     break;
                                 case ComponentTypes.NUMBER_UNIT_OUTPUT:
                                 case ComponentTypes.BOOLEAN_OUTPUT:

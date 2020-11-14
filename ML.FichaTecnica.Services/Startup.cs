@@ -7,6 +7,7 @@ namespace ML.FichaTecnica.Services
     {
         public static void ConfigureServices(IServiceCollection services, IConfiguration config)
         {
+            services.AddSingleton<INumbersToLanguage, NumerosLeiblesService>();
             services.AddScoped<IMeliClient, MeliClientService>();
             services.AddScoped<IFichaTecnicaService, FichaTecnicaService>();
         }
