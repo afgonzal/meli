@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.IO;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,12 +16,12 @@ namespace ML.FichaTecnica
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            FichaTecnica.Services.Startup.ConfigureServices(services, Configuration);
+            FichaTecnica.Services.Startup.ConfigureServices(services, Configuration, Path.GetDirectoryName(Assembly.GetEntryAssembly().Location));
 
             services.AddControllers().AddJsonOptions(opt =>
             {
@@ -35,6 +38,7 @@ namespace ML.FichaTecnica
                
             }
 
+           
             app.UseMyMiddleware();
 
             app.UseHttpsRedirection();

@@ -85,6 +85,9 @@ namespace ML.FichaTecnica.Services
             {
                 //splitear en miles
                 var result = new StringBuilder(Espanol(numero / 1000));
+                //excepcion al 21mil
+                if (result.ToString() == "veintiuno")
+                    result = new StringBuilder("veintiun");
                 result.Append(" mil");
                 if ((numero % 1000) > 0)
                 {

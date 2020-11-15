@@ -5,6 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
@@ -15,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ML.FichaTecnica.BusinessEntities\ML.FichaTecnica.BusinessEntities.csproj" />
+    <ProjectReference Include="..\ML.FichaTecnica.Stats.DataLayer\ML.FichaTecnica.Stats.DataLayer.csproj" />
   </ItemGroup>
 
   <ItemGroup>

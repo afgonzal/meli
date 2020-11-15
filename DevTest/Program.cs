@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ML.FichaTecnica.Services;
+using ML.FichaTecnica.Stats.DataLayer;
 using Newtonsoft.Json;
 using NLog.Extensions.Logging;
 
@@ -14,21 +16,8 @@ namespace DevTest
     {
         static async Task Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-            //Console.WriteLine("4586 {0}", HumanFriendlyInteger.IntegerToWritten(4586));
-
-            //var numeros = new List<int>
-            //{
-            //    0, 1, 2, 5, 8, 12, 15, 18, 20, 21,22,23,29, 30, 40, 42, 46, 98, 100, 101,111, 200,222, 300,343,400, 404,411,421,431,441, 444,451,461, 471, 
-            //    481, 491,500,508, 600, 666, 700, 745, 800,816,900, 901,915, 999, 1000, 1001, 1010, 1100,
-            //    1203, 1220, 1224, 10000, 20000, 20123, 
-            //    21312, 45456, 53135,
-            //    1000000, 1111111, 1180000, 1180400, 1180430,
-            //    1200000, 1250000, 2000000, 12000000, 12345678, -3
-            //};
-            //numeros.ForEach(x => Console.WriteLine("{0} {1}", x, NumerosLeibles.Int2Espanol(x)));
-
-
+            Console.WriteLine("AGA testing ML FT");
+          
             //await svc.GetItem("MLA885018383");
 
             //await svc.GetTechnicalSpecs("MLA-CELLPHONES");
@@ -66,9 +55,7 @@ namespace DevTest
             services.AddScoped<IConfiguration>(provider => config);
 
 
-            services.AddTransient<IMeliClient, MeliClientService>();
-            services.AddTransient<IFichaTecnicaService, FichaTecnicaService>();
-
+            ML.FichaTecnica.Services.Startup.ConfigureServices(services, config, "");
 
             services.AddTransient<TestMeli>();
             return services.BuildServiceProvider();
@@ -79,19 +66,34 @@ namespace DevTest
     public class TestMeli
     {
         private readonly IFichaTecnicaService _fichaTecnicaService;
+        private readonly IStatsService _dataAccess;
         private readonly ILogger<TestMeli> _logger;
 
-        public TestMeli(IFichaTecnicaService fichaTecnicaService, ILogger<TestMeli> logger)
+        public TestMeli(IFichaTecnicaService fichaTecnicaService, IStatsService statsService, ILogger<TestMeli> logger)
         {
             _fichaTecnicaService = fichaTecnicaService;
+            _dataAccess = statsService;
             _logger = logger;
         }
         public async Task Run()
         {
             _logger.LogDebug("Arrancando");
-            var result = await _fichaTecnicaService.BuildItemAttributes("MLA885018383");
-            _logger.LogDebug(JsonConvert.SerializeObject(result));
-            _logger.LogDebug("Fin corrida App");
+            Console.WriteLine("First run to warmup");
+            await _dataAccess.ExtractStatsById("MLA885018383");
+
+            var sw = new Stopwatch();
+            sw.Start();
+            //var result = await _fichaTecnicaService.BuildItemAttributes("MLA885018383");
+            //_logger.LogDebug(JsonConvert.SerializeObject(result));
+
+            var byId = await _dataAccess.ExtractStatsById("MLA885018383");
+            Console.WriteLine("ById {0}", byId.Count);
+            sw.Stop();
+
+            var byDate =
+                await _dataAccess.ExtractStatsByDateRange(new DateTimeOffset(new DateTime(2020, 11, 14), TimeSpan.Zero), new DateTimeOffset(new DateTime(2020, 11, 15), TimeSpan.Zero));
+            Console.WriteLine("ByDate {0}", byDate.Count);
+            _logger.LogDebug("Fin corrida App {ms}ms", sw.ElapsedMilliseconds);
         }
     }
     

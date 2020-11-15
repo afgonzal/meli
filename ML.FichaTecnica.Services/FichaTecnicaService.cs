@@ -31,10 +31,19 @@ namespace ML.FichaTecnica.Services
             _logger.LogDebug($"BuildItemAttributes start item:{itemId}");
             
             var item = await _backend.GetItem(itemId);
+
+            //if item has no attrs nothing to do
+            if (!item.Attributes.Any())
+                return new ItemAttributesOutput {Id = item.Id, Title = item.Title, Groups = new List<GroupOutput>()};
+
             //Move List to a Dictionary to improve search efficiency
             var itemAttributes = item.Attributes.ToDictionary(attr => attr.Id, attr => attr);
 
             var techSpecs = await _backend.GetTechnicalSpecs(item.DomainId);
+
+            //if FT has no groups , nothing to do
+            if (!techSpecs.Groups.Any())
+                return new ItemAttributesOutput { Id = item.Id, Title = item.Title, Groups = new List<GroupOutput>() };
 
             var sw = new Stopwatch();
             sw.Start();
