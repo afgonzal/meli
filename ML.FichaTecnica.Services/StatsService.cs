@@ -23,7 +23,7 @@ namespace ML.FichaTecnica.Services
 
         public Task RecordEvent(string eventName, string id)
         {
-            _logger.LogInformation("Event {eventName}-{id} took {ms}ms.", eventName, id);
+            _logger.LogInformation("Event {eventName}-{id}.", eventName, id);
             return Task.CompletedTask;
         }
 

@@ -167,13 +167,13 @@ namespace ML.FichaTecnica.Services.Tests
         }
 
         [Test]
-        public async Task Fail_GetItemReturnsNull_ThrowException()
+        public async Task Fail_GetFTReturnsNull_ThrowException()
         {
             _meliClient.Setup(x => x.GetItem(It.IsAny<string>())).ReturnsAsync((Item)null);
             _meliClient.Setup(x => x.GetTechnicalSpecs(It.IsAny<string>())).ReturnsAsync(MockedTechSpec());
 
             var service = new FichaTecnicaService(_meliClient.Object, _logger.Object, _numbersService.Object);
-            Assert.ThrowsAsync<NullReferenceException>(async () => await service.BuildItemAttributes("MLA34"));
+            Assert.ThrowsAsync<ArgumentException>(async () => await service.BuildItemAttributes("MLA34"));
 
 
             _meliClient.Verify(x => x.GetItem(It.IsAny<string>()), Times.Once);
@@ -185,7 +185,26 @@ namespace ML.FichaTecnica.Services.Tests
                 (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Once);
         }
 
-        
+        [Test]
+        public async Task Fail_GetItemReturnsNull_ThrowException()
+        {
+            _meliClient.Setup(x => x.GetItem(It.IsAny<string>())).ReturnsAsync(MockedItem());
+            _meliClient.Setup(x => x.GetTechnicalSpecs(It.IsAny<string>())).ReturnsAsync((TechnicalSpecs)null);
+
+            var service = new FichaTecnicaService(_meliClient.Object, _logger.Object, _numbersService.Object);
+            Assert.ThrowsAsync<ArgumentException>(async () => await service.BuildItemAttributes("MLA34"));
+
+
+            _meliClient.Verify(x => x.GetItem(It.IsAny<string>()), Times.Once);
+            _meliClient.Verify(x => x.GetTechnicalSpecs(It.IsAny<string>()), Times.Once);
+            _logger.Verify(x => x.Log(It.IsAny<LogLevel>(),
+                It.IsAny<EventId>(),
+                It.IsAny<It.IsAnyType>(),
+                It.IsAny<Exception>(),
+                (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Once);
+        }
+
+
 
         [Test]
         public async Task Fail_GetItemFails_ThrowException()

@@ -21,7 +21,11 @@ namespace ML.FichaTecnica.Services
             _logger = logger;
             _client = client;
         }
-
+        /// <summary>
+        /// Trae item by Id
+        /// </summary>
+        /// <param name="itemId"></param>
+        /// <returns></returns>
         public async Task<Item> GetItem(string itemId)
         {
             var sw = new Stopwatch();
@@ -39,7 +43,11 @@ namespace ML.FichaTecnica.Services
            
 
         }
-
+        /// <summary>
+        /// Trae Ficha Técnica para un dominio ej.Celulares
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <returns></returns>
         public async Task<TechnicalSpecs> GetTechnicalSpecs(string domain)
         {
             var sw = new Stopwatch();

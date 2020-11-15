@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using ML.FichaTecnica.BusinessEntities;
-using Newtonsoft.Json.Linq;
 
 namespace ML.FichaTecnica.Services
 {

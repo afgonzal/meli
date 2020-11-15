@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -31,6 +32,8 @@ namespace ML.FichaTecnica.Services
             _logger.LogDebug($"BuildItemAttributes start item:{itemId}");
             
             var item = await _backend.GetItem(itemId);
+            if (item == null)
+                throw new ArgumentException($"Invalid Item Id {itemId}, or Item not found.");
 
             //if item has no attrs nothing to do
             if (!item.Attributes.Any())
@@ -40,6 +43,8 @@ namespace ML.FichaTecnica.Services
             var itemAttributes = item.Attributes.ToDictionary(attr => attr.Id, attr => attr);
 
             var techSpecs = await _backend.GetTechnicalSpecs(item.DomainId);
+            if (techSpecs == null)
+                throw new ArgumentException($"Invalid Domain {item.DomainId}, or TechSpec not found.");
 
             //if FT has no groups , nothing to do
             if (!techSpecs.Groups.Any())
