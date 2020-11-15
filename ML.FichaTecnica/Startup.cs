@@ -19,7 +19,7 @@ namespace ML.FichaTecnica
         public void ConfigureServices(IServiceCollection services)
         {
             FichaTecnica.Services.Startup.ConfigureServices(services, Configuration);
-            
+
             services.AddControllers().AddJsonOptions(opt =>
             {
                 opt.JsonSerializerOptions.IgnoreNullValues = true;
@@ -35,7 +35,7 @@ namespace ML.FichaTecnica
                
             }
 
-            
+            app.UseMyMiddleware();
 
             app.UseHttpsRedirection();
             app.UseRouting();

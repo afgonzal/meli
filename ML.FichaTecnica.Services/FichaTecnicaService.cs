@@ -60,7 +60,7 @@ namespace ML.FichaTecnica.Services
           
     
             sw.Stop();
-            _logger.LogDebug($"BuildItemAttributes end item:{itemId}, time:{sw.ElapsedMilliseconds}ms");
+            _logger.LogDebug($"BuildItemAttributes end item:{itemId}, Elapsed:{sw.ElapsedMilliseconds}ms");
 
             return new ItemAttributesOutput { Id = itemId, Title = item.Title, Groups = resultGroups.ToList()};
         }

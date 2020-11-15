@@ -8,6 +8,7 @@ namespace ML.FichaTecnica.Services
     {
         public static void ConfigureServices(IServiceCollection services, IConfiguration config)
         {
+            //use http factory to reuse httpclient
             services.AddHttpClient<IMeliClient, MeliClientService>(client =>
             {
                 client.BaseAddress = new Uri(config["MLApiBaseUrl"]);
@@ -17,7 +18,7 @@ namespace ML.FichaTecnica.Services
             
 
             services.AddSingleton<INumbersToLanguage, NumerosLeiblesService>();
-            //services.AddScoped<IMeliClient, MeliClientService>();
+            services.AddScoped<IStatsService, StatsService>();
             services.AddScoped<IFichaTecnicaService, FichaTecnicaService>();
         }
     }

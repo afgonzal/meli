@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,11 +14,13 @@ namespace ML.FichaTecnica.Controllers
     public class ItemsController : ControllerBase
     {
         private readonly IFichaTecnicaService _fichaTecnicaService;
+        private readonly IStatsService _statsService;
         private readonly ILogger<ItemsController> _logger;
 
-        public ItemsController(IFichaTecnicaService fichaTecnicaService, ILogger<ItemsController> logger)
+        public ItemsController(IFichaTecnicaService fichaTecnicaService, IStatsService statsService, ILogger<ItemsController> logger)
         {
             _fichaTecnicaService = fichaTecnicaService;
+            _statsService = statsService;
             _logger = logger;
         }
      
@@ -27,12 +28,13 @@ namespace ML.FichaTecnica.Controllers
         [HttpGet("{id}/attributes")]
         public async Task<IActionResult> GetAttributes([FromRoute] string id)
         {
-            _logger.LogInformation($"Get item {id} attributes.");
+            _logger.LogInformation("Get item {id} attributes.", id);
             try
             {
                 var result = await _fichaTecnicaService.BuildItemAttributes(id);
-                _logger.LogTrace($"Get item {id} attributes response:{JsonConvert.SerializeObject(result)}");
-                _logger.LogInformation($"Get item {id} attributes finished.");
+                _logger.LogTrace("Get item {id} attributes response: {@result}", id, result);
+                _logger.LogInformation("Get item {id} attributes finished.", id);
+                _statsService.RecordEvent("Items.GetAttributes", id);
                 return Ok(result);
             }
             catch (Exception ex)
